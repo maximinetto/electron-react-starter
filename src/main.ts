@@ -42,13 +42,13 @@ const createMenu = (window: BrowserWindow) => {
         {
           label: "Home",
           click() {
-            return openHome(window);
+            openHome(window);
           },
         },
         {
           label: "Contact",
           click() {
-            return openContact(window);
+            openContact(window);
           },
         },
       ],
