@@ -37,4 +37,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   </React.StrictMode>
 );
 
+window.electronAPI.setURL((_event, url) => {
+  console.log(url);
+});
+
 console.log("👋 Hola mundo!");

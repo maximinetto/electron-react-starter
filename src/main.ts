@@ -1,7 +1,4 @@
-import { app, BrowserWindow } from "electron";
-import installExtension, {
-  REACT_DEVELOPER_TOOLS,
-} from "electron-devtools-installer";
+import { app, BrowserWindow, Menu } from "electron";
 import path from "path";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -11,9 +8,6 @@ if (require("electron-squirrel-startup")) {
 
 const createWindow = async () => {
   // Create the browser window.
-  installExtension(REACT_DEVELOPER_TOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log("An error occurred: ", err));
 
   const mainWindow = new BrowserWindow({
     width: 800,
@@ -22,6 +16,10 @@ const createWindow = async () => {
       preload: path.join(__dirname, "preload.js"),
     },
   });
+
+  const template = createMenu(mainWindow);
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -35,6 +33,36 @@ const createWindow = async () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
+
+const createMenu = (window: BrowserWindow) => {
+  return [
+    {
+      label: "Menu",
+      submenu: [
+        {
+          label: "Home",
+          click() {
+            return openHome(window);
+          },
+        },
+        {
+          label: "Contact",
+          click() {
+            return openContact(window);
+          },
+        },
+      ],
+    },
+  ];
+};
+
+function openHome(window: BrowserWindow) {
+  return window.webContents.send("set-url", "/");
+}
+
+function openContact(window: BrowserWindow) {
+  return window.webContents.send("set-url", "/contact");
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
